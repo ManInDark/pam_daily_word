@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "pam_appl.h": "c",
+        "libintl.h": "c",
+        "syslog.h": "c",
+        "string.h": "c",
+        "grp.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c"
+    }
+}
