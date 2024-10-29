@@ -3,7 +3,7 @@
 #include <security/pam_ext.h>
 #include <time.h>
 
-#define LIST_PATH "/tmp/list"
+#define LIST_PATH "/etc/daily-word/list"
 #define LIST_LENGTH 20
 #define LINE_LENGTH 5
 
