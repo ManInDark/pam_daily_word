@@ -6,8 +6,11 @@ build:
 	rm bin/provider.o
 	cp list /tmp/list
 
-link: build
-	sudo ln -s $(shell pwd)/bin/provider.so /usr/lib/x86_64-linux-gnu/security/pam_daily_word.so
+install: package
+	sudo apt install -y -f ./package/libpam-daily-word_${VERSION}_amd64.deb
+
+remove:
+	sudo apt remove -y libpam-daily-word
 
 pamrule:
 	- sudo rm /etc/pam.d/test_app
@@ -17,10 +20,8 @@ test:
 	./bin/testconsumer jan
 
 clean:
-	- sudo rm /usr/lib/x86_64-linux-gnu/security/pam_daily_word.so
 	- sudo rm /etc/pam.d/test_app
-	- rm -r bin
-	- rm /tmp/list
+	- rm -r bin package
 
 package: build
 	mkdir -p tmp/usr/lib/x86_64-linux-gnu/security
