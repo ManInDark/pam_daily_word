@@ -13,7 +13,7 @@ remove:
 
 pamrule: build
 	- sudo rm /etc/pam.d/test_app
-	echo "auth required pam_daily_word.so" | sudo tee /etc/pam.d/test_app
+	echo "auth required pam_daily_word.so tries=3" | sudo tee /etc/pam.d/test_app
 
 test: install pamrule
 	pamtester test_app jan authenticate
