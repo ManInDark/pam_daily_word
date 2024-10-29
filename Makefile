@@ -2,7 +2,6 @@ build:
 	mkdir -p bin
 	gcc -fPIC -c provider.c -o bin/provider.o
 	gcc -shared -o bin/provider.so bin/provider.o -lpam
-	gcc -o bin/testconsumer consumer.c -lpam -lpam_misc
 	rm bin/provider.o
 	cp list /tmp/list
 
@@ -12,14 +11,14 @@ install: package
 remove:
 	sudo apt remove -y libpam-daily-word
 
-pamrule:
+pamrule: build
 	- sudo rm /etc/pam.d/test_app
 	echo "auth required pam_daily_word.so" | sudo tee /etc/pam.d/test_app
 
-test:
-	./bin/testconsumer jan
+test: install pamrule
+	pamtester test_app jan authenticate
 
-clean:
+clean: remove
 	- sudo rm /etc/pam.d/test_app
 	- rm -r bin package
 
