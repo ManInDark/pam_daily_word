@@ -3,6 +3,7 @@
 #include <security/pam_ext.h>
 #include <time.h>
 #include <stdlib.h>
+#include <syslog.h>
 
 #define LIST_PATH "/etc/daily-word/list"
 #define LIST_LENGTH 119
@@ -38,17 +39,20 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     struct tm *lt = localtime(&t);
     int chosen_line = (lt->tm_yday % LIST_LENGTH);
 
+    pam_syslog(pamh, LOG_NOTICE, "Chosen line number: %d", chosen_line);
+
     // read line from list
     FILE *list_file = fopen(LIST_PATH, "r");
-    char line[256];
+    char line[LINE_LENGTH + 2];
     for (int i = 0; i < chosen_line + 1; i++)
     {
-        fgets(line, 256, list_file);
+        fgets(line, LINE_LENGTH + 2, list_file);
     }
     fclose(list_file);
 
     char wordle[LINE_LENGTH + 1] = {"\0"};
     strncpy(wordle, line, LINE_LENGTH);
+    pam_syslog(pamh, LOG_NOTICE, "Chosen line text: %s", line);
 
     for (int i = 0; i < tries; i++)
     {
