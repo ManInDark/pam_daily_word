@@ -10,6 +10,8 @@ jobs:
             fail-fast: false
             matrix:
                 platform: [amd64, arm64, armhf]
+        permissions:
+            contents: write
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
