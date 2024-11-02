@@ -37,5 +37,4 @@ jobs:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
                 file: package/libpam-daily-word_${{ github.ref_name }}_${{ matrix.platform }}.deb
                 asset_name: libpam-daily-word_${{ github.ref_name }}_${{ matrix.platform }}.deb
-                tag: ${{ github.ref_name }}
                 overwrite: false
