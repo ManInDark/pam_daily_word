@@ -34,7 +34,7 @@ package: build
 	echo "Version: ${VERSION}" >> tmp/DEBIAN/control
 	echo "Maintainer: ManInDark" >> tmp/DEBIAN/control
 	echo "Depends: libpam0g" >> tmp/DEBIAN/control
-	echo "Architecture: amd64" >> tmp/DEBIAN/control
+	echo "Architecture: ${ARCH}" >> tmp/DEBIAN/control
 	echo "Homepage: https://github.com/ManInDark/pam_daily_word" >> tmp/DEBIAN/control
 	echo "Description: a daily word guessing PAM Module" >> tmp/DEBIAN/control
 

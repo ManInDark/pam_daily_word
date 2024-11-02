@@ -1,0 +1,43 @@
+on:
+    push:
+        tags:
+            - '*.*.*'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                platform:
+                    - linux/amd64
+                    - linux/arm64
+                    - linux/arm/v7
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Install packages
+              run: |
+                sudo apt update
+                sudo apt install -y make build-essential libpam0g-dev
+            - name: Set Environment Variables
+              run: |
+                echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+                echo "ARCH=${{ matrix.platform }}" >> $GITHUB_ENV
+            - name: Build
+              run: make package
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v4
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                tag_name: ${{ github.ref_name }}
+                release_name: Release ${{ github.ref_name }}
+                draft: false
+                prerelease: false
+            - name: Upload Release Asset
+              uses: actions/upload-artifact@v4
+              with:
+                name: libpam-daily-word_${{ github.ref_name }}-${{ matrix.platform }}.deb
+                path: package/libpam-daily-word_${{ github.ref_name }}-${{ matrix.platform }}.deb
