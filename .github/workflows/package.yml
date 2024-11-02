@@ -9,10 +9,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                platform:
-                    - linux/amd64
-                    - linux/arm64
-                    - linux/arm/v7
+                platform: [amd64, arm64, armhf]
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
