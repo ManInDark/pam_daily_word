@@ -32,7 +32,10 @@ jobs:
             - name: Build
               run: make package
             - name: Upload Release Asset
-              uses: actions/upload-artifact@v4
+              uses: svenstaro/upload-release-action@v2
               with:
-                name: libpam-daily-word_${{ github.ref_name }}_${{ matrix.platform }}.deb
-                path: package/libpam-daily-word_${{ github.ref_name }}_${{ matrix.platform }}.deb
+                repo_token: ${{ secrets.GITHUB_TOKEN }}
+                file: package/libpam-daily-word_${{ github.ref_name }}_${{ matrix.platform }}.deb
+                asset_name: libpam-daily-word_${{ github.ref_name }}_${{ matrix.platform }}.deb
+                tag: ${{ github.ref_name }}
+                overwrite: false
