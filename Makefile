@@ -1,7 +1,7 @@
 build:
 	mkdir -p bin
-	gcc -fPIC -c provider.c -o bin/provider.o
-	gcc -shared -o bin/provider.so bin/provider.o -lpam
+	gcc -O3 -fsanitize=undefined -fstack-protector-strong -Wall -fPIC -c provider.c -o bin/provider.o
+	gcc -O3 -fsanitize=undefined -fstack-protector-strong -Wall -shared -o bin/provider.so bin/provider.o -lpam
 	rm bin/provider.o
 	cp list /tmp/list
 
@@ -11,7 +11,7 @@ install: package
 remove:
 	sudo apt remove -y libpam-daily-word
 
-pamrule: build
+pamrule:
 	- sudo rm /etc/pam.d/test_app
 	echo "auth required pam_daily_word.so tries=3" | sudo tee /etc/pam.d/test_app
 

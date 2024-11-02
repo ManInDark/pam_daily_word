@@ -6,6 +6,8 @@
         "string.h": "c",
         "grp.h": "c",
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "limits": "c",
+        "*.tcc": "c"
     }
 }

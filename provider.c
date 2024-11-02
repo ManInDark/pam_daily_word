@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <syslog.h>
+#include <sys/param.h>
 
 #define LIST_PATH "/etc/daily-word/list"
 #define LIST_LENGTH 119
@@ -50,35 +51,38 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     }
     fclose(list_file);
 
-    char wordle[LINE_LENGTH + 1] = {"\0"};
+    char wordle[LINE_LENGTH] = {"\0"};
     strncpy(wordle, line, LINE_LENGTH);
     pam_syslog(pamh, LOG_NOTICE, "Chosen line text: %s", line);
 
     for (int i = 0; i < tries; i++)
     {
-        // first get user input
-        char **user_response;
-        pam_prompt(pamh, PAM_PROMPT_ECHO_ON, user_response, "Guess wordle: ");
+        char *user_response;
+        int return_value = pam_prompt(pamh, PAM_PROMPT_ECHO_ON, &user_response, "Guess wordle: ");
+        if (return_value != PAM_SUCCESS)
+        {
+            pam_syslog(pamh, LOG_ERR, "pam_prompt failed with return code %i", return_value);
+        }
 
         printf("Response: ");
-        for (size_t i = 0; i < strlen(*user_response); i++)
+        for (size_t i = 0; i < MIN(strlen(user_response), strlen(wordle)); i++)
         {
-            if (wordle[i] == (*user_response)[i])
+            if (wordle[i] == user_response[i])
             {
-                printf("\033[0;32m%c\033[0m", (*user_response)[i]);
+                printf("\033[0;32m%c\033[0m", user_response[i]);
             }
-            else if (strchr(wordle, (*user_response)[i]) != NULL)
+            else if (strchr(wordle, user_response[i]) != NULL)
             {
-                printf("\033[0;33m%c\033[0m", (*user_response)[i]);
+                printf("\033[0;33m%c\033[0m", user_response[i]);
             }
             else
             {
-                printf("%c", (*user_response)[i]);
+                printf("%c", user_response[i]);
             }
         }
         printf("\n");
 
-        if (strcmp(*user_response, wordle) == 0)
+        if (strcmp(user_response, wordle) == 0)
         {
             return PAM_SUCCESS;
         }
