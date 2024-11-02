@@ -1,0 +1,15 @@
+{
+    "name": "PAM Environment",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.makefile-tools",
+                "ms-vscode.cpptools-extension-pack"
+            ]
+        }
+    },
+    "runArgs": ["--env-file", "${localWorkspaceFolder}/.env"]
+}

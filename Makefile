@@ -20,7 +20,7 @@ test: install pamrule
 
 clean: remove
 	- sudo rm /etc/pam.d/test_app
-	- rm -r bin package
+	- rm -r bin package tmp
 
 package: build
 	mkdir -p tmp/usr/lib/x86_64-linux-gnu/security
