@@ -3,7 +3,6 @@ build:
 	gcc -O3 -fsanitize=undefined -fstack-protector-strong -Wall -fPIC -c provider.c -o bin/provider.o
 	gcc -O3 -fsanitize=undefined -fstack-protector-strong -Wall -shared -o bin/provider.so bin/provider.o -lpam
 	rm bin/provider.o
-	cp list /tmp/list
 
 install: package
 	sudo apt install -y -f ./package/libpam-daily-word_${VERSION}_amd64.deb
@@ -23,21 +22,18 @@ clean: remove
 	- rm -r bin package tmp
 
 package: build
-	mkdir -p tmp/usr/lib/x86_64-linux-gnu/security
-	cp bin/provider.so tmp/usr/lib/x86_64-linux-gnu/security/pam_daily_word.so
+	echo "Package: libpam-daily-word" >> control
+	echo "Version: ${VERSION}" >> control
+	echo "Maintainer: ManInDark" >> control
+	echo "Depends: libpam0g" >> control
+	echo "Architecture: ${ARCH}" >> control
+	echo "Homepage: https://github.com/ManInDark/pam_daily_word" >> control
+	echo "Description: a daily word guessing PAM Module" >> control
 
-	mkdir -p tmp/etc/daily-word
-	cp list tmp/etc/daily-word/list
-
-	mkdir -p tmp/DEBIAN
-	echo "Package: libpam-daily-word" >> tmp/DEBIAN/control
-	echo "Version: ${VERSION}" >> tmp/DEBIAN/control
-	echo "Maintainer: ManInDark" >> tmp/DEBIAN/control
-	echo "Depends: libpam0g" >> tmp/DEBIAN/control
-	echo "Architecture: ${ARCH}" >> tmp/DEBIAN/control
-	echo "Homepage: https://github.com/ManInDark/pam_daily_word" >> tmp/DEBIAN/control
-	echo "Description: a daily word guessing PAM Module" >> tmp/DEBIAN/control
+	sudo install -D -m 644 -o root -g root bin/provider.so tmp/usr/lib/x86_64-linux-gnu/security/pam_daily_word.so
+	sudo install -D -m 644 -o root -g root list tmp/etc/daily-word/list
+	sudo install -D -m 644 -o root -g root control tmp/DEBIAN/control
 
 	- mkdir package
 	dpkg --build tmp package
-	rm -r tmp
+	- sudo rm -r tmp control
