@@ -51,7 +51,7 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     }
     fclose(list_file);
 
-    char wordle[LINE_LENGTH] = {"\0"};
+    char wordle[LINE_LENGTH + 1] = {"\0"};
     strncpy(wordle, line, LINE_LENGTH);
     pam_syslog(pamh, LOG_NOTICE, "Chosen line text: %s", line);
 
