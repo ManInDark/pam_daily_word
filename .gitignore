@@ -1,3 +1,2 @@
 bin/*
-*.deb
-gpg
+package/*

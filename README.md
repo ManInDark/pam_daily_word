@@ -10,9 +10,3 @@ sudo wget -O /etc/apt/trusted.gpg.d/pam_daily_word.gpg https://manindark.github.
 sudo apt update
 sudo apt install libpam-daily-word
 ```
-
-This would be how to install the package, if github pages actually served `.deb` files, but it doesn't. To selfhost the repository you only need to serve the files in `repository` via http. This could for example be done with python:
-
-```shell
-python -m http.server 80
-```
