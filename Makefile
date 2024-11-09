@@ -29,6 +29,8 @@ package: build
 	echo "Architecture: ${ARCH}" >> control
 	echo "Homepage: https://github.com/ManInDark/pam_daily_word" >> control
 	echo "Description: a daily word guessing PAM Module" >> control
+	echo "Section: misc" >> control
+	echo "Priority: optional" >> control
 
 	sudo install -D -m 644 -o root -g root bin/provider.so tmp/usr/lib/x86_64-linux-gnu/security/pam_daily_word.so
 	sudo install -D -m 644 -o root -g root list tmp/etc/daily-word/list
@@ -37,3 +39,9 @@ package: build
 	- mkdir package
 	dpkg --build tmp package
 	- sudo rm -r tmp control
+
+update-repository:
+	wget -O /tmp/libpam-daily-word_${VERSION}_amd64.deb https://github.com/ManInDark/pam_daily_word/releases/download/${VERSION}/libpam-daily-word_${VERSION}_amd64.deb
+	wget -O /tmp/libpam-daily-word_${VERSION}_arm64.deb https://github.com/ManInDark/pam_daily_word/releases/download/${VERSION}/libpam-daily-word_${VERSION}_arm64.deb
+	wget -O /tmp/libpam-daily-word_${VERSION}_armhf.deb https://github.com/ManInDark/pam_daily_word/releases/download/${VERSION}/libpam-daily-word_${VERSION}_armhf.deb
+	reprepro -b repository/debian includedeb bookworm /tmp/libpam-daily-word_*
