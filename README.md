@@ -4,14 +4,9 @@ This is a test project to play around with pam provider and consumer, it is curr
 
 ## Installation
 
-Caution: the list is currently copied to `/tmp/list`, which is not persistent, so don't enable it for anything important, as it would fail without the file
-
 ```shell
-make build link pamrule
-```
-
-## Testing
-
-```shell
-make test
+echo deb https://manindark.github.io/pam_daily_word/debian bookworm stable | sudo tee /etc/apt/sources.list.d/pam_daily_word.list
+sudo wget -O /etc/apt/trusted.gpg.d/pam_daily_word.gpg https://manindark.github.io/pam_daily_word/key.gpg
+sudo apt update
+sudo apt install libpam-daily-word
 ```
