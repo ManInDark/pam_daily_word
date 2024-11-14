@@ -8,6 +8,8 @@ on:
 jobs:
   sign_file:
     runs-on: ubuntu-latest
+    container:
+      image: debian:latest
 
     steps:
       - name: Checkout code
