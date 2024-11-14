@@ -1,0 +1,27 @@
+name: GPG Signing Test
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  sign_file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install package
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          sudo apt update
+          sudo apt install -y reprepo
+          echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import
+          gpg -su "manindark@own.manindark.me" list
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: list.gpg
+          path: list.gpg

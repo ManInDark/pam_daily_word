@@ -1,2 +1,2 @@
-mkdir -p gpg
-gpg --homedir gpg --generate-key --batch Keyparameter
+# exports previously generated key in format fitting for github secrets
+gpg --armor --export-secret-keys 'manindark@own.manindark.me' | tr '\n' '|' > export.asc
