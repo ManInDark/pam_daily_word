@@ -17,11 +17,12 @@ jobs:
       - name: Install package
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           apt update
           apt install -y reprepro
-          echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import
-          gpg -su "manindark@own.manindark.me" list
+          echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import --verbose
+          gpg --verbose --pinentry-mode loopback -su 'manindark@own.manindark.me' --batch --passphrase "$GPG_PASSPHRASE" list
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
