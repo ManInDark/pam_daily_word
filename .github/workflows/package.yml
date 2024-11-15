@@ -26,6 +26,10 @@ jobs:
               run: |
                 sudo apt update
                 sudo apt install -y make build-essential libpam0g-dev
+            - name: Set Environment Variables
+              run: |
+                echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+                echo "ARCH=arm64" >> $GITHUB_ENV
             - name: Build
               run: make package
             - name: Upload Release Asset
