@@ -73,8 +73,9 @@ jobs:
                 echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import --verbose
                 gpg --verbose --pinentry-mode loopback -su 'manindark@own.manindark.me' --batch --passphrase "$GPG_PASSPHRASE" list
                 reprepro -b repository/debian includedeb bookworm /tmp/libpam-daily-word_${{ github.ref_name }}_amd64.deb
-                git add repository/debian
-                git config --global user.name "repository maintainer bot"
-                git config --global user.email "manindark@users.noreply.com"
-                git commit -m "apt repository update"
-                git push
+            - uses: EndBug/add-and-commit@v9
+              with:
+                add: "repository/debian"
+                message: apt repository update
+                committer_name: GitHub Actions
+                committer_email: 41898282+github-actions[bot]@users.noreply.github.com
