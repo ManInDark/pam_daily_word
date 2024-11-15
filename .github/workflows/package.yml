@@ -57,6 +57,10 @@ jobs:
               with:
                 name: libpam-daily-word_${{ github.ref_name }}_arm64.deb
                 path: /tmp
+                pattern: *.deb
+                merge-multiple: true
+            - name: List /tmp
+              run: ls -Rhal /tmp
             - name: Install Packages
               env:
                 GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
