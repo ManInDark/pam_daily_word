@@ -11,11 +11,6 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
-            matrix:
-                platform:
-                    - linux/amd64
-                    - linux/arm64
-                    - linux/arm/v7
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
