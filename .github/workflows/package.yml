@@ -66,7 +66,7 @@ jobs:
                 GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
               run: |
                 apt update
-                apt install -t experimental reprepro -y
+                apt install -t experimental reprepro git -y
                 echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import --verbose
                 gpg --verbose --pinentry-mode loopback -su 'manindark@own.manindark.me' --batch --passphrase "$GPG_PASSPHRASE" list
                 reprepro -b repository/debian includedeb bookworm /tmp/libpam-daily-word_${{ github.ref_name }}_amd64.deb
