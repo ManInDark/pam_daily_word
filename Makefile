@@ -42,6 +42,4 @@ package: build
 
 update-repository:
 	wget -O /tmp/libpam-daily-word_${VERSION}_amd64.deb https://github.com/ManInDark/pam_daily_word/releases/download/${VERSION}/libpam-daily-word_${VERSION}_amd64.deb
-	wget -O /tmp/libpam-daily-word_${VERSION}_arm64.deb https://github.com/ManInDark/pam_daily_word/releases/download/${VERSION}/libpam-daily-word_${VERSION}_arm64.deb
-	wget -O /tmp/libpam-daily-word_${VERSION}_armhf.deb https://github.com/ManInDark/pam_daily_word/releases/download/${VERSION}/libpam-daily-word_${VERSION}_armhf.deb
 	reprepro -b repository/debian includedeb bookworm /tmp/libpam-daily-word_*

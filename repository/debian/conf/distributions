@@ -2,3 +2,4 @@ Codename: bookworm
 Architectures: amd64 arm64 armhf
 Components: main
 SignWith: BE76E81F6A6FC853D2BC11D9FD61ABA02EFA0D81
+Limit: 10
