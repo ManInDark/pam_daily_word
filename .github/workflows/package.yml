@@ -21,7 +21,8 @@ jobs:
             - name: Install Packages & set environment
               run: |
                 apt update
-                apt install -t experimental reprepro git make build-essential libpam0g-dev sudo gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi gcc-arm-linux-gnueabihf gcc-hppa64-linux-gnu gcc-i686-linux-gnu gcc-powerpc64le-linux-gnu gcc-s390x-linux-gnu gcc-mips-linux-gnu gcc-mipsel-linux-gnu gcc-alpha-linux-gnu gcc-arc-linux-gnu gcc-hppa-linux-gnu gcc-m68k-linux-gnu gcc-powerpc-linux-gnu gcc-powerpc64-linux-gnu gcc-riscv64-linux-gnu gcc-sh4-linux-gnu gcc-sparc64-linux-gnu -y
+                apt install -t experimental reprepro -y
+                apt install  git make build-essential libpam0g-dev sudo gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi gcc-arm-linux-gnueabihf gcc-hppa64-linux-gnu gcc-i686-linux-gnu gcc-powerpc64le-linux-gnu gcc-s390x-linux-gnu gcc-mips-linux-gnu gcc-mipsel-linux-gnu gcc-alpha-linux-gnu gcc-arc-linux-gnu gcc-hppa-linux-gnu gcc-m68k-linux-gnu gcc-powerpc-linux-gnu gcc-powerpc64-linux-gnu gcc-riscv64-linux-gnu gcc-sh4-linux-gnu gcc-sparc64-linux-gnu -y
                 echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
                 echo "ARCH=amd64" >> $GITHUB_ENV
             - name: Checkout code
