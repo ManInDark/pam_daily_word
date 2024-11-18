@@ -65,6 +65,8 @@ jobs:
                 echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import --verbose
                 gpg --verbose --pinentry-mode loopback -su 'manindark@own.manindark.me' --batch --passphrase "$GPG_PASSPHRASE" list
                 reprepro -b repository/debian includedeb bookworm /tmp/libpam-daily-word_${{ github.ref_name }}_amd64.deb
+                pwd
+                ls -R
             - uses: EndBug/add-and-commit@v9
               with:
                 add: "repository/debian"
