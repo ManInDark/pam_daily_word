@@ -42,7 +42,11 @@ jobs:
         container:
             image: debian:experimental
         steps:
-            - name: Checkout code
+            - name: Install Packages
+              run: |
+                apt update
+                apt install -t experimental reprepro git -y
+            - name: Checkout Code
               uses: actions/checkout@v4
              #with:
                #repository: ${{ github.event.pull_request.head.repo.full_name }}
@@ -53,20 +57,15 @@ jobs:
                 name: libpam-daily-word_${{ github.ref_name }}_amd64.deb
                 path: /tmp
                 merge-multiple: true
-            - name: List /tmp
-              run: ls -Rhal /tmp
-            - name: Install Packages
+            - name: Update Repository
               env:
                 GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
                 GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
               run: |
-                apt update
-                apt install -t experimental reprepro git -y
                 echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import --verbose
                 gpg --verbose --pinentry-mode loopback -su 'manindark@own.manindark.me' --batch --passphrase "$GPG_PASSPHRASE" list
                 reprepro -b repository/debian includedeb bookworm /tmp/libpam-daily-word_${{ github.ref_name }}_amd64.deb
-                pwd
-                ls -R
+                ls -halR
             - uses: EndBug/add-and-commit@v9
               with:
                 add: "repository/debian"
