@@ -21,20 +21,22 @@ jobs:
             - name: Install Packages & set environment
               run: |
                 apt update
-                apt install -t experimental reprepro git make build-essential libpam0g-dev sudo -y
+                apt install -t experimental reprepro git make build-essential libpam0g-dev sudo gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi gcc-arm-linux-gnueabihf gcc-hppa64-linux-gnu gcc-i686-linux-gnu gcc-powerpc64le-linux-gnu gcc-s390x-linux-gnu gcc-mips-linux-gnu gcc-mipsel-linux-gnu gcc-alpha-linux-gnu gcc-arc-linux-gnu gcc-hppa-linux-gnu gcc-m68k-linux-gnu gcc-powerpc-linux-gnu gcc-powerpc64-linux-gnu gcc-riscv64-linux-gnu gcc-sh4-linux-gnu gcc-sparc64-linux-gnu -y
                 echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
                 echo "ARCH=amd64" >> $GITHUB_ENV
             - name: Checkout code
               uses: actions/checkout@v4
             - name: Build
-              run: make package
+              run: |
+                make package
+                ./cross-compile.sh
             - name: Upload Release Asset
               uses: svenstaro/upload-release-action@v2
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
-                file: package/libpam-daily-word_${{ github.ref_name }}_amd64.deb
-                asset_name: libpam-daily-word_${{ github.ref_name }}_amd64.deb
+                file: package/libpam-daily-word_*.deb
                 overwrite: false
+                file_glob: true
             - name: Update Repository
               env:
                 GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -42,7 +44,7 @@ jobs:
               run: |
                 echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import --verbose
                 gpg --verbose --pinentry-mode loopback -su 'manindark@own.manindark.me' --batch --passphrase "$GPG_PASSPHRASE" list
-                reprepro -b repository/debian includedeb bookworm package/libpam-daily-word_${{ github.ref_name }}_amd64.deb
+                for d in `find package/*`; do reprepro -b repository/debian includedeb bookworm $d; done
                 git config --global --add safe.directory /__w/pam_daily_word/pam_daily_word
             - uses: EndBug/add-and-commit@v9
               with:
