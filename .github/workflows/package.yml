@@ -23,7 +23,7 @@ jobs:
             - name: Install Packages & set environment
               run: |
                 apt update
-                apt install -t experimental reprepro git make build-essential libpam0g-dev -y
+                apt install -t experimental reprepro git make build-essential libpam0g-dev sudo -y
                 echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
                 echo "ARCH=amd64" >> $GITHUB_ENV
             - name: Build
