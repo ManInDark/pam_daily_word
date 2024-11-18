@@ -1,0 +1,16 @@
+Package: libpam-daily-word
+Version: 1.1.4
+Maintainer: ManInDark
+Depends: libpam0g
+Architecture: m68k
+Homepage: https://github.com/ManInDark/pam_daily_word
+Priority: optional
+Section: misc
+Filename: pool/main/libp/libpam-daily-word/libpam-daily-word_1.1.4_m68k.deb
+Size: 4896
+SHA512: e06a9a99ad14013b0b5a6e2a5a8a9b8a93968977df33ac88ee09a071e31dbebdf52c1b08f2188148ba1aa408da81d376ebcb9279df33018664174c33d162c22f
+SHA256: 26aec19876e3852a55ad5586c4ce118cfd6e2b6954b8e82ddf749157fea6ccd0
+SHA1: 19dc6485ac8ccc39147031e8645bbb76b35f9d7a
+MD5sum: e839f46c0f4220231b408d955f889613
+Description: a daily word guessing PAM Module
+
