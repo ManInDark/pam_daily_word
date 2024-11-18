@@ -18,14 +18,14 @@ jobs:
         steps:
             - name: Create Release
               uses: ncipollo/release-action@v1
-            - name: Checkout code
-              uses: actions/checkout@v4
             - name: Install Packages & set environment
               run: |
                 apt update
                 apt install -t experimental reprepro git make build-essential libpam0g-dev sudo -y
                 echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
                 echo "ARCH=amd64" >> $GITHUB_ENV
+            - name: Checkout code
+              uses: actions/checkout@v4
             - name: Build
               run: make package
             - name: Upload Release Asset
