@@ -39,6 +39,8 @@ jobs:
     repository:
         runs-on: ubuntu-latest
         needs: create_release_and_build
+        permissions:
+          contents: write
         container:
             image: debian:experimental
         steps:
