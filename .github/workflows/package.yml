@@ -73,3 +73,4 @@ jobs:
                 message: apt repository update
                 committer_name: GitHub Actions
                 committer_email: 41898282+github-actions[bot]@users.noreply.github.com
+                new_branch: main
