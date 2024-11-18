@@ -4,22 +4,26 @@ on:
             - '*.*.*'
     workflow_dispatch:
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-    create_release_and_build:
+    package_and_update_repository:
         runs-on: ubuntu-latest
         permissions:
-            contents: write
+          contents: write
+        container:
+            image: debian:experimental
         steps:
             - name: Create Release
               uses: ncipollo/release-action@v1
             - name: Checkout code
               uses: actions/checkout@v4
-            - name: Install packages
+            - name: Install Packages & set environment
               run: |
-                sudo apt update
-                sudo apt install -y make build-essential libpam0g-dev
-            - name: Set Environment Variables
-              run: |
+                apt update
+                apt install -t experimental reprepro git make build-essential libpam0g-dev -y
                 echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
                 echo "ARCH=amd64" >> $GITHUB_ENV
             - name: Build
@@ -31,34 +35,6 @@ jobs:
                 file: package/libpam-daily-word_${{ github.ref_name }}_amd64.deb
                 asset_name: libpam-daily-word_${{ github.ref_name }}_amd64.deb
                 overwrite: false
-            - name: Upload Release Artifact
-              uses: actions/upload-artifact@v4
-              with:
-                name: libpam-daily-word_${{ github.ref_name }}_amd64.deb
-                path: package/libpam-daily-word_${{ github.ref_name }}_amd64.deb
-    repository:
-        runs-on: ubuntu-latest
-        needs: create_release_and_build
-        permissions:
-          contents: write
-        container:
-            image: debian:experimental
-        steps:
-            - name: Install Packages
-              run: |
-                apt update
-                apt install -t experimental reprepro git -y
-            - name: Checkout Code
-              uses: actions/checkout@v4
-             #with:
-               #repository: ${{ github.event.pull_request.head.repo.full_name }}
-               #ref: ${{ github.event.pull_request.head.ref }}
-            - name: Download Release Artifact
-              uses: actions/download-artifact@v4
-              with:
-                name: libpam-daily-word_${{ github.ref_name }}_amd64.deb
-                path: /tmp
-                merge-multiple: true
             - name: Update Repository
               env:
                 GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -66,7 +42,7 @@ jobs:
               run: |
                 echo "$GPG_PRIVATE_KEY" | tr '|' '\n' | gpg --batch --yes --import --verbose
                 gpg --verbose --pinentry-mode loopback -su 'manindark@own.manindark.me' --batch --passphrase "$GPG_PASSPHRASE" list
-                reprepro -b repository/debian includedeb bookworm /tmp/libpam-daily-word_${{ github.ref_name }}_amd64.deb
+                reprepro -b repository/debian includedeb bookworm package/libpam-daily-word_${{ github.ref_name }}_amd64.deb
                 git config --global --add safe.directory /__w/pam_daily_word/pam_daily_word
                 ls -halR
             - uses: EndBug/add-and-commit@v9
@@ -76,3 +52,25 @@ jobs:
                 committer_name: GitHub Actions
                 committer_email: 41898282+github-actions[bot]@users.noreply.github.com
                 new_branch: main
+    deploy_github_pages:
+        runs-on: ubuntu-latest
+        needs: package_and_update_repository
+        permissions:
+          contents: read
+          pages: write
+          id-token: write
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup Pages
+              uses: actions/configure-pages@v5
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                path: './repository'
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
