@@ -10,3 +10,13 @@ sudo wget -O /etc/apt/trusted.gpg.d/pam_daily_word.gpg https://manindark.github.
 sudo apt update
 sudo apt install libpam-daily-word
 ```
+
+Alternatively, if you use the newer apt-sources configuration, you can skip the first command and put the following content into `/etc/apt/sources.list.d/pam_daily_word.sources`.
+
+```
+Types: deb
+URIs: http://manindark.github.io/pam_daily_word/debian/
+Suites: bookworm
+Components: main
+Signed-By: /etc/apt/trusted.gpg.d/pam_daily_word.gpg
+```
